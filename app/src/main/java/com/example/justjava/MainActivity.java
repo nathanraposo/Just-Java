@@ -2,7 +2,10 @@ package com.example.justjava;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void fazerPedido(View view) {
-        exibirMensagem(criarResumoPedido());
+        criarResumoPedido();
     }
 
     /**
@@ -37,23 +40,30 @@ public class MainActivity extends AppCompatActivity {
      *
      * @return
      */
-    private String criarResumoPedido() {
+    private void criarResumoPedido() {
         Boolean checkChantilly = binding.checkboxChantilly.isChecked();
         Boolean checkChocolate = binding.checkboxChocolate.isChecked();
         String mensagemPedido = "";
 
-        if(qtdCafe > 0){
+        if (qtdCafe > 0) {
             mensagemPedido = "Nome: " + binding.editNome.getText() + " \n" +
                     (checkChantilly ? "Quer chantilly no café \n" : "") +
                     (checkChocolate ? "Quer chocolate no café \n" : "") +
                     "Quantidade: " + qtdCafe + " \n" +
-                    "Total: R$" + calculaPrecoPedido(qtdCafe, 5) + "\n" +
+                    "Total: R$" + calculaPrecoPedido(qtdCafe, 5, checkChantilly, checkChocolate) + "\n" +
                     "Obrigado";
-        }else{
-            mensagemPedido = "Por favor adicione ao menos um café";
-        }
 
-        return mensagemPedido;
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("mailto:")); //  somente apps de email iram responder a essa intent
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Pedido feito no App Just Java para: " + binding.editNome.getText());
+            intent.putExtra(Intent.EXTRA_TEXT, mensagemPedido);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
+
+        } else {
+            Toast.makeText(this, "Por favor adicione ao menos um café!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -61,28 +71,36 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param quantidade
      * @param preco
+     * @param checkChantilly
+     * @param checkChocolate
      * @return
      */
-    private int calculaPrecoPedido(int quantidade, int preco) {
-        return quantidade * preco;
+    private int calculaPrecoPedido(int quantidade, int preco, boolean checkChantilly, boolean checkChocolate) {
+        int precoBase = preco;
+
+        if (checkChantilly) {
+            precoBase += 1;
+        }
+
+        if (checkChocolate) {
+            precoBase += 2;
+        }
+
+        return quantidade * precoBase;
     }
 
-    private void exibirMensagem(String message) {
-        binding.tvResumoPedido.setText(message);
-    }
+
 
     private void exibirQuantidadeCafe(int quantidade) {
         binding.tvQuantidade.setText("" + quantidade);
     }
 
     public void addCafe(View view) {
-        exibirMensagem("AGUARDANDO PEDIDO");
         qtdCafe += 1;
         exibirQuantidadeCafe(qtdCafe);
     }
 
     public void removeCafe(View view) {
-        exibirMensagem("AGUARDANDO PEDIDO");
         if (qtdCafe != 0) {
             qtdCafe -= 1;
             exibirQuantidadeCafe(qtdCafe);

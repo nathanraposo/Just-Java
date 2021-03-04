@@ -101,27 +101,6 @@
                     android:text="+" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="8dp"
-                android:text="Resumo do pedido"
-                android:textAllCaps="true" />
-
-            <TextView
-                android:id="@+id/tvResumoPedido"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="7dp"
-                android:layout_marginRight="8dp"
-                android:text="Total: R$ 0,00"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
-
             <Button
                 android:id="@+id/btPedido"
                 android:layout_width="wrap_content"
