@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Este metodo é responsavel por realizar um pedido
+     *
      * @param view
      */
     public void fazerPedido(View view) {
@@ -37,10 +38,20 @@ public class MainActivity extends AppCompatActivity {
      * @return
      */
     private String criarResumoPedido() {
-        String mensagemPedido = "Nome: Nathan Raposo Olivo \n" +
-                "Quantidade: " + qtdCafe + " \n" +
-                "Total: R$" + calculaPrecoPedido(qtdCafe, 5) + "\n" +
-                "Obrigado";
+        Boolean checkChantilly = binding.checkboxChantilly.isChecked();
+        Boolean checkChocolate = binding.checkboxChocolate.isChecked();
+        String mensagemPedido = "";
+
+        if(qtdCafe > 0){
+            mensagemPedido = "Nome: " + binding.editNome.getText() + " \n" +
+                    (checkChantilly ? "Quer chantilly no café \n" : "") +
+                    (checkChocolate ? "Quer chocolate no café \n" : "") +
+                    "Quantidade: " + qtdCafe + " \n" +
+                    "Total: R$" + calculaPrecoPedido(qtdCafe, 5) + "\n" +
+                    "Obrigado";
+        }else{
+            mensagemPedido = "Por favor adicione ao menos um café";
+        }
 
         return mensagemPedido;
     }
